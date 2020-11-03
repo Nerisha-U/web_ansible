@@ -1,0 +1,29 @@
+---
+- name: install webserver
+  hosts: web01
+  become: yes
+  tasks:
+    - name: install httpd package
+      yum: 
+        name: httpd
+        state: latest
+      
+    - name: Copying index.html 
+      copy:
+       dest: "/var/www/html/index.html"
+       content: |
+         Hello from Ansible
+          
+    - name: start and enable httpd service on system reboot
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+        notify: restart httpd
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
+...
+        
